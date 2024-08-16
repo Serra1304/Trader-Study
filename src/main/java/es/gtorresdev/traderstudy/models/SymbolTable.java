@@ -1,10 +1,12 @@
 package es.gtorresdev.traderstudy.models;
 
 public class SymbolTable {
+    private final String filePath;
     private String symbol;
     private long totalRecords;
 
-    public SymbolTable(String symbol, long totalRecords) {
+    public SymbolTable(String filePath, String symbol, long totalRecords) {
+        this.filePath = filePath;
         this.symbol = symbol;
         this.totalRecords = totalRecords;
     }
@@ -23,5 +25,9 @@ public class SymbolTable {
 
     public void setTotalRecords(long totalRecords) {
         this.totalRecords = totalRecords;
+    }
+
+    public String getFile() {
+        return filePath;
     }
 }

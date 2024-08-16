@@ -7,8 +7,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 
 import java.util.List;
 
@@ -53,9 +57,28 @@ public class SymbolTableController {
      */
     @FXML
     private void initialize() {
-        configureTableColumns();
+        setupSymbolTable();
+        setupTableColumns();
         setupColumnAutoResize();
         loadTableData();
+    }
+
+
+    private void setupSymbolTable() {
+        symbolTable.setRowFactory(e -> {
+            TableRow<SymbolTable> row = new TableRow<>();
+            row.setOnDragDetected(event -> {
+                if (!row.isEmpty()) {
+                    SymbolTable rowData = row.getItem();
+                    Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+                    ClipboardContent content = new ClipboardContent();
+                    content.putString("CHART:" + rowData.getFile());
+                    db.setContent(content);
+                    event.consume();
+                }
+            });
+            return row;
+        });
     }
 
 
@@ -63,7 +86,7 @@ public class SymbolTableController {
      * Configura las columnas de la tabla.
      * Establece las fábricas de valores de celda para las columnas de símbolo y de registros totales.
      */
-    private void configureTableColumns() {
+    private void setupTableColumns() {
         symbolColumn.setCellValueFactory(new PropertyValueFactory<>("symbol"));
         totalRecordsColumn.setCellValueFactory(new PropertyValueFactory<>("totalRecords"));
     }

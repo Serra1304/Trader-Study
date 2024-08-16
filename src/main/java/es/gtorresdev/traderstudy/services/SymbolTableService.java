@@ -8,7 +8,6 @@ import es.gtorresdev.traderstudy.models.SymbolTable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class SymbolTableService {
 
             for (File file : listOfFiles) {
                 if (file.isFile()) {
-                    items.add(new SymbolTable(getFileName(file), getTotalRecords(file)));
+                    items.add(new SymbolTable(file.getPath(), getFileName(file), getTotalRecords(file)));
                 }
             }
         } catch (Exception e) {
