@@ -3,6 +3,7 @@ package es.gtorresdev.traderstudy.services;
 import candleChart.charts.candle.Candle;
 import candleChart.charts.candle.CandleChart;
 import es.gtorresdev.traderstudy.indicators.Indicator;
+import es.gtorresdev.traderstudy.models.input.InputStatus;
 import es.gtorresdev.traderstudy.utils.FileDataLoader;
 import javafx.scene.layout.Pane;
 import org.jetbrains.annotations.NotNull;
@@ -92,10 +93,12 @@ public class ChartSyncService {
      * @param indicator  el indicador a agregar al gráfico
      */
     public void add(@NotNull Indicator indicator) {
+        InputStatus inputStatus = chartUIManager.addIndicator(indicator);
         indicator.initialize(chartDataManager.getCandleList());
 
-        chartUIManager.addIndicator(indicator);
-        chartDataManager.add(indicator);
+        if (inputStatus == InputStatus.ACCEPTED) {
+            chartDataManager.add(indicator);
+        }
     }
 
 

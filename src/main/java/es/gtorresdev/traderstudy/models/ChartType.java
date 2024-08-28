@@ -11,7 +11,6 @@ public enum ChartType {
     BAR(BarChart.class);
 
     private final Class<? extends Chart<?>> chartClass;
-    //private Chart<?> instance;
 
     ChartType(Class<? extends Chart<?>> chartClass) {
         this.chartClass = chartClass;
@@ -23,5 +22,9 @@ public enum ChartType {
             } catch (Exception e) {
                 throw new RuntimeException("No se pudo crear la instancia del gráfico", e);
             }
+    }
+
+    public Class<?> getChartType() {
+        return chartClass;
     }
 }

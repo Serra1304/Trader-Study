@@ -25,4 +25,6 @@ module es.gtorresdev.traderstudy {
     exports es.gtorresdev.traderstudy.services;
     exports es.gtorresdev.traderstudy.models;
     exports es.gtorresdev.traderstudy.utils;
+    exports es.gtorresdev.traderstudy.models.input;
+    opens es.gtorresdev.traderstudy.models.input to javafx.base;
 }

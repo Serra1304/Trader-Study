@@ -112,8 +112,6 @@ public class MainController {
                 chartSyncService.openChart(filePath);
 
             } else if (content.startsWith(INDICATOR_PREFIX)) {
-                System.out.println("Es un indicador");
-
                 String className = content.substring(16);
 
                 try {
@@ -122,7 +120,6 @@ public class MainController {
                         Class<? extends Indicator> indicatorClass = clazz.asSubclass(Indicator.class);
                         Indicator indicator = indicatorClass.getDeclaredConstructor().newInstance();
 
-                        System.out.println("Es un indicador: " + indicator);
                         chartSyncService.add(indicator);
                     } else {
                         System.out.println("La clase no es un tipo de indicador");

@@ -2,12 +2,16 @@ package es.gtorresdev.traderstudy.services;
 
 import candleChart.charts.base.Chart;
 import candleChart.charts.base.ChartBase;
+import es.gtorresdev.traderstudy.controllers.IndicatorConfigController;
 import es.gtorresdev.traderstudy.indicators.Indicator;
 import es.gtorresdev.traderstudy.models.ChartData;
+import es.gtorresdev.traderstudy.models.input.InputStatus;
+import es.gtorresdev.traderstudy.view.NewWindowsModal;
 import javafx.embed.swing.SwingNode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -24,6 +28,7 @@ public class ChartUIManager {
     private final SwingNode swingNode;
 
     private final AnchorPane anchorPane;
+    private final ApplicationContext context;
 
 
     /**
@@ -31,7 +36,8 @@ public class ChartUIManager {
      * Este constructor crea un contenedor `AnchorPane` que alberga un `SwingNode`, el cual es responsable de contener
      * el componente Swing del gráfico (`ChartBase`).
      */
-    public ChartUIManager() {
+    public ChartUIManager(ApplicationContext context) {
+        this.context = context;
         chartBase = new ChartBase();
         anchorPane = new AnchorPane();
 
@@ -83,10 +89,26 @@ public class ChartUIManager {
      *
      * @param indicator indicador a añadir al gráfico base.
      */
-    public void addIndicator(@NotNull Indicator indicator) {
-        for (ChartData chart : indicator.getPaintingElements()) {
-            chartBase.addChart(chart.getChartType());
+    public InputStatus addIndicator(@NotNull Indicator indicator) {
+        NewWindowsModal<IndicatorConfigController> configModal = new NewWindowsModal<>(context, "/es/gtorresdev/traderstudy/view/IndicatorConfig.fxml");
+        IndicatorConfigController configController = configModal.getController();
+        configController.config(indicator);
+
+        configModal.showAndWait();
+
+        InputStatus inputStatus = configController.getStatus();
+
+        if (inputStatus == InputStatus.ACCEPTED) {
+            for (ChartData chart : indicator.getPaintingElements()) {
+                chartBase.addChart(chart.getChartType());
+            }
+            SwingUtilities.updateComponentTreeUI(chartBase);
+
+            return InputStatus.ACCEPTED;
+        } else {
+            System.out.println("cancelado");
+
+            return InputStatus.CANCELED;
         }
-        SwingUtilities.updateComponentTreeUI(chartBase);
     }
 }
